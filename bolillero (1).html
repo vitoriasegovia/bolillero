@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bolillero de Bingo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            color: #004080;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #004080;
+        }
+        .bolilla {
+            font-size: 80px;
+            font-weight: bold;
+            margin: 20px;
+        }
+        .boton {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #004080;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .boton:hover {
+            background-color: #0066cc;
+        }
+        .historial {
+            margin-top: 20px;
+        }
+        .bolillas-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 5px;
+            margin-top: 20px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .bolilla-item {
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            border-radius: 50%;
+            background-color: white;
+            border: 2px solid #004080;
+            color: #004080;
+            font-weight: bold;
+        }
+        .bolilla-item.sorteada {
+            background-color: #004080;
+            color: white;
+        }
+        .contador {
+            font-size: 20px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bolillero de Bingo (1-90)</h1>
+    <div class="bolilla" id="bolillaActual">-</div>
+    <button class="boton" onclick="sortearBolilla()">Siguiente Bolilla</button>
+    <button class="boton" onclick="reiniciarJuego()">Reiniciar Juego</button>
+    <div class="contador" id="contadorRestantes">Bolillas restantes: 90</div>
+
+    <div class="historial">
+        <h2>Historial de Bolillas:</h2>
+        <div class="bolillas-grid" id="bolillasGrid"></div>
+    </div>
+
+    <script>
+        let bolillas = [];
+        let bolillasSorteadas = [];
+
+        function inicializarJuego() {
+            bolillas = [];
+            bolillasSorteadas = [];
+            for (let i = 1; i <= 90; i++) {
+                bolillas.push(i);
+            }
+            document.getElementById("bolillaActual").innerText = "-";
+            actualizarHistorial();
+            actualizarContador();
+        }
+
+        function sortearBolilla() {
+            if (bolillas.length === 0) {
+                alert("¡Ya salieron todas las bolillas!");
+                return;
+            }
+            const indice = Math.floor(Math.random() * bolillas.length);
+            const bolilla = bolillas.splice(indice, 1)[0];
+            bolillasSorteadas.push(bolilla);
+            document.getElementById("bolillaActual").innerText = bolilla;
+            actualizarHistorial();
+            actualizarContador();
+        }
+
+        function actualizarHistorial() {
+            const grid = document.getElementById("bolillasGrid");
+            grid.innerHTML = "";
+            for (let i = 1; i <= 90; i++) {
+                const div = document.createElement("div");
+                div.classList.add("bolilla-item");
+                div.innerText = i;
+                if (bolillasSorteadas.includes(i)) {
+                    div.classList.add("sorteada");
+                }
+                grid.appendChild(div);
+            }
+        }
+
+        function actualizarContador() {
+            const contador = document.getElementById("contadorRestantes");
+            contador.innerText = "Bolillas restantes: " + bolillas.length;
+        }
+
+        function reiniciarJuego() {
+            if (confirm("¿Estás seguro de que quieres reiniciar el juego?")) {
+                inicializarJuego();
+            }
+        }
+
+        // Inicializamos el juego al cargar la página
+        inicializarJuego();
+    </script>
+</body>
+</html>
